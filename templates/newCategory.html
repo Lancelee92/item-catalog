@@ -1,0 +1,24 @@
+<html>
+<head>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='semantic.min.css') }}">   
+</head>
+<body>
+<div class = 'ui card centered grid'>
+<div class="content">
+    <div class="header">New Category</div>
+</div>
+
+
+<div class = 'content'>
+<form class='ui form' action="{{url_for('newCategory')}}" method = 'POST'>
+    <div class="field">
+        <label>Name</label>
+        <input type='text' size='250' name='name'>
+    </div>
+    <button class="ui button" type="submit">Create New Category</button>
+</form>
+<a class="ui button" href='{{url_for('home')}}'>Cancel</a>
+</div>
+</div>
+</body>
+</html>
