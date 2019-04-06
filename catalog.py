@@ -38,7 +38,7 @@ def topNewItem():
 @app.route('/category/new', methods=['GET', 'POST'])
 def newCategory():
     if request.method == 'POST':
-        newCategory = Categories(name = request.form['name'])
+        newCategory = Categories(name = request.form['name'], img = request.form['img'])
         session.add(newCategory)
         session.commit()
         flash('New Category Created', 'positive')
@@ -52,6 +52,7 @@ def editCategory(category_id):
 
     if request.method == 'POST':
         category.name = request.form['name']
+        category.img = request.form['img']
         session.add(category)
         session.commit()
         flash('Category Edited', 'positive')

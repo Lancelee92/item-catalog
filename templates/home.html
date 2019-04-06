@@ -23,6 +23,9 @@
 <div class='content'>
     {% for category in categories %}
         <div class = 'one column centered grid ui card grid'>
+            <div class="image">
+              <img src="{{category.img}}">
+            </div>
             <div class="content">
                 <a href="{{url_for('itemlist', category_id = category.id)}}" class="header">{{category.name}}</a>
             </div>
