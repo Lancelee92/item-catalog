@@ -16,7 +16,16 @@
       </div>
     </div>-->
     <div class="item">
+      {% if 'username' not in session %}
         <a href="{{url_for('showLogin')}}" class="ui primary button">Log-in</a>
+      {% else %}
+        <a href="{{url_for('gdisconnect')}}" class="ui primary button">Log-out</a>
+      {% endif %}
     </div>
+    {% if 'username' in session %}
+      <div class="item">
+        <img class="ui avatar image" src="{{session['picture']}}">
+      </div>
+    {% endif %}
   </div>
 </div>
