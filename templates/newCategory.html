@@ -1,8 +1,6 @@
-<html>
-<head>
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='semantic.min.css') }}">   
-</head>
-<body>
+{% extends "main.html" %}
+{% block content %}
+{% include "headers.html" %}
 <div class = 'ui card centered grid'>
 <div class="content">
     <div class="header">New Category</div>
@@ -22,5 +20,4 @@
 <a class="ui button" href='{{url_for('home')}}'>Cancel</a>
 </div>
 </div>
-</body>
-</html>
+{% endblock %}

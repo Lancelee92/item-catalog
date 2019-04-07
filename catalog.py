@@ -28,7 +28,8 @@ def home():
 
 @app.route('/login')
 def showLogin():
-    return "Login page"
+    return render_template('login.html')
+    #return "Login page"
 
 @app.route('/topNewItem')
 def topNewItem():

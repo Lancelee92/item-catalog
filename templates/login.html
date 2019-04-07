@@ -1,0 +1,14 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "headers.html" %}
+
+<div class = 'ui card centered grid'>
+<div class="content">
+    <div class="header">Login</div>
+</div>
+
+<div class = 'content'>
+
+<a class="ui button" href='{{url_for('home')}}'>Cancel</a>
+</div>
+{% endblock %}
