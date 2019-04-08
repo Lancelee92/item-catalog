@@ -3,8 +3,9 @@
 {% include "headers.html" %}
 <div class="ui centered header">
 <h2 class="">Item List</h2>
-
-<a href="{{url_for('newItemList', category_id = category_id)}}">Create New Item</a>
+{% if 'username' in session %}
+    <a href="{{url_for('newItemList', category_id = category_id)}}">Create New Item</a>
+{% endif %}
 </div>
 </br>
 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -25,7 +26,9 @@
             <div class="content">
                 <div class="header">{{item.name}}</div>
             </div>
-            <h4 class="ui sub header">{{item.time_created}}</h4>
+            <div class="meta">
+              <span>Author: {{item.category.user.name}}</span>
+            </div>
             <h4 class="ui sub header">{{item.category.name}}</h4>
             <div class="event">
                 <div class="content">
@@ -34,14 +37,16 @@
                     </div>
                 </div>
             </div>   
-            <div class="extra content">
-                <div class="ui large transparent left icon input">
-                    <a href="{{url_for('editItemList', item_id = item.id, category_id = item.category_id)}}">Edit</a>
-                </div>
-                <div class="ui large transparent left icon input">
-                    <a href="{{url_for('deleteItemList', item_id = item.id, category_id = item.category_id)}}">Delete</a>
-                </div>
-            </div>  
+            {% if session['email'] ==  item.category.user.email %}
+                <div class="extra content">
+                    <div class="ui large transparent left icon input">
+                        <a href="{{url_for('editItemList', item_id = item.id, category_id = item.category_id)}}">Edit</a>
+                    </div>
+                    <div class="ui large transparent left icon input">
+                        <a href="{{url_for('deleteItemList', item_id = item.id, category_id = item.category_id)}}">Delete</a>
+                    </div>
+                </div>  
+            {% endif %}
         </div>
     {% endfor %}
 </div>

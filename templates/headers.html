@@ -5,8 +5,8 @@
   <a href="{{url_for('topNewItem')}}" class="header item">
     Recently Added 
   </a>
-  <a class="header item">
-    Friends
+  <a href="{{url_for('authorlist')}}" class="header item">
+    Authors
   </a>
   <div class="right ui menu">
     <!--<div class="item">
@@ -19,8 +19,12 @@
       {% if 'username' not in session %}
         <a href="{{url_for('showLogin')}}" class="ui primary button">Log-in</a>
       {% else %}
-        <!--<a href="{{url_for('gdisconnect')}}" class="ui primary button">Log-out</a>-->
-        <a href="{{url_for('fbdisconnect')}}" class="ui primary button">Log-out</a>
+        {% if session['provider'] == 'google' %}
+          <a href="{{url_for('gdisconnect')}}" class="ui primary button">Log-out</a>
+        {% else %}
+          <a href="{{url_for('fbdisconnect')}}" class="ui primary button">Log-out</a>
+        {% endif %}
+        
       {% endif %}
     </div>
     {% if 'username' in session %}

@@ -38,10 +38,16 @@ def topNewItem():
     items = session.query(CategoryItem).order_by(CategoryItem.time_created.desc()).limit(10)
     return render_template('topNewItem.html', items=items)
 
+@app.route('/authorlist')
+def authorlist():
+    authors = session.query(User)
+    return render_template('authorlist.html', authors = authors)
+
 @app.route('/category/new', methods=['GET', 'POST'])
 def newCategory():
     if request.method == 'POST':
-        newCategory = Categories(name = request.form['name'], img = request.form['img'])
+        user_id = getUserID(login_session['email'])
+        newCategory = Categories(name = request.form['name'], img = request.form['img'], user_id = user_id)
         session.add(newCategory)
         session.commit()
         flash('New Category Created', 'positive')
@@ -181,6 +187,7 @@ def gconnect():
 
     data = answer.json()
 
+    login_session['provider'] = 'google'
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
@@ -224,9 +231,11 @@ def gdisconnect():
         del login_session['username']
         del login_session['email']
         del login_session['picture']
-
-        response = make_response(json.dumps('disconnected.'), 200)
-        response.headers['Content-Type'] = 'application/json'
+        del login_session['provider']
+        flash('You have been logged out!', 'positive')
+        response = make_response(redirect('/home'))
+        # response = make_response(json.dumps('disconnected.'), 200)
+        # response.headers['Content-Type'] = 'application/json'
         return response
     else:
         # For whatever reason, the given token was invalid
@@ -249,7 +258,6 @@ def fbconnect():
     url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (app_id, app_secret, access_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
-    print(json.loads(result))
 
     # Use token to get user info from API
     userinfo_url = "https://graph.facebook.com/v3.2/me"
@@ -261,14 +269,11 @@ def fbconnect():
         api calls
     '''
     token = result.split(',')[0].split(':')[1].replace('"', '')
-    print(token)
     url = 'https://graph.facebook.com/v2.8/me?access_token=%s&fields=name,id,email' % token
-    print(url)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     # print "url sent for API access:%s"% url
     # print "API JSON result: %s" % result
-    print(result)
     data = json.loads(result)
     login_session['provider'] = 'facebook'
     login_session['username'] = data["name"]
@@ -309,10 +314,39 @@ def fbdisconnect():
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
+    
     url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id,access_token)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
-    return "you have been logged out"
+    # result = json.loads(h.request(url, 'DELETE')[1])
+    del login_session['provider']
+    del login_session['username']
+    del login_session['email']
+    del login_session['facebook_id']
+    del login_session['picture'] 
+    del login_session['access_token']
+    flash('You have been logged out!', 'positive')
+    response = make_response(redirect('/home'))
+    #response = make_response(json.dumps('you have been logged out.'), 200)
+    #response.headers['Content-Type'] = 'application/json'
+    return response
+    # if result['success'] == 'True':
+    #     # Reset the user's session
+    #     del login_session['provider']
+    #     del login_session['username']
+    #     del login_session['email']
+    #     del login_session['facebook_id']
+    #     del login_session['picture']
+    #     del login_session['access_token']
+
+    #     response = make_response(json.dumps('you have been fbed logged out.'), 200)
+    #     response.headers['Content-Type'] = 'application/json'
+    #     return response
+    # else:
+    #     # For whatever reason, the given token was invalid
+    #     response = make_response(json.dumps('Failed to revoke token for the given user. Result: %s ' % result), 400)
+    #     response.headers['Content-Type'] = 'application/json'
+    #     return response
 
 # User Helper Functions
 
