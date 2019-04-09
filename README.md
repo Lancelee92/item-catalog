@@ -12,8 +12,8 @@
 7. Run `` $ vagrant init `` in item-catalog folder
 8. Replace Vagrantfile in the item-catalog folder
 9. Run this code to start vagrant
-   `` $ vagrant up ``
-   `` $ vagrant ssh ``
+...`` $ vagrant up ``
+...`` $ vagrant ssh ``
 
 ##### Database
 1. Open a file name *database_setup.py*
