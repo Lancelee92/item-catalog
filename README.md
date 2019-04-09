@@ -17,4 +17,7 @@
    `` $ vagrant ssh ``  
 
 ### Database
-1. Open a file name *database_setup.py*
+1. Run `` & python database-setup.py `` to set up the database
+2. Run `` & python catalog.py `` to start the site
+3. Browse the site at [http://localhost:5000](http://localhost:5000)
+
