@@ -1,8 +1,8 @@
 # item-catalog
 
-### **Guide** 
+## **Guide** 
 
-##### Set up vagrant
+### Set up vagrant
 1. go [virtualbox.org](https://www.virtualbox.org)
 2. download and install virtualbox for your operating systems
 3. go [vagrantup.com](https://www.vagrantup.com/downloads.html)
@@ -13,8 +13,8 @@
 8. Replace Vagrantfile in the item-catalog folder
 9. Run this code to start vagrant
 
-  `` $ vagrant up ``
-  `` $ vagrant ssh ``  
+   `` $ vagrant up ``   
+   `` $ vagrant ssh ``  
 
-##### Database
+### Database
 1. Open a file name *database_setup.py*
