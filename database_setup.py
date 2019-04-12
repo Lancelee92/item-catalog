@@ -30,6 +30,7 @@ class Categories(Base):
         return {
             'name': self.name,
             'id': self.id,
+            'img': self.img,
         }
 
 class CategoryItem(Base):
@@ -40,8 +41,8 @@ class CategoryItem(Base):
     description = Column(String(500))
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     category_id = Column(Integer, ForeignKey('categories.id'))
-    category = relationship(Categories)
     user_id = Column(Integer, ForeignKey('user.id'))
+    category = relationship(Categories)
     user = relationship(User)
 
     @property
@@ -50,6 +51,9 @@ class CategoryItem(Base):
             'name': self.name,
             'id': self.id,
             'description': self.description,
+            'time_created': self.time_created,
+            'category_id': self.category_id,
+            'user_id': self.user_id,
 
         }
 

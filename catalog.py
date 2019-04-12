@@ -26,6 +26,26 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+@app.route('/home/JSON')
+def categoryJSON():
+    categories = session.query(Categories)
+    return jsonify(categories=[r.serialize for r in categories])
+
+@app.route('/categories/<int:category_id>/itemlist/JSON')
+def itemlistJSON(category_id):
+    itemlist = session.query(CategoryItem).filter_by(category_id = category_id)
+    return jsonify(itemlist=[r.serialize for r in itemlist])
+
+@app.route('/topNewItem/JSON')
+def topNewItemJSON():
+    items = session.query(CategoryItem).order_by(CategoryItem.time_created.desc()).limit(10)
+    return jsonify(itemlist=[r.serialize for r in items])
+
+@app.route('/authorlist/JSON')
+def authorlistJSON():
+    authors = session.query(User)
+    return jsonify(authors=[r.serialize for r in authors])
+
 @app.route('/')
 @app.route('/home')
 def home():
@@ -46,8 +66,11 @@ def authorlist():
 @app.route('/category/new', methods=['GET', 'POST'])
 def newCategory():
     if request.method == 'POST':
-        user_id = getUserID(login_session['email'])
-        newCategory = Categories(name = request.form['name'], img = request.form['img'], user_id = user_id)
+        newCategory = Categories(
+                                    name = request.form['name'], 
+                                    img = request.form['img'], 
+                                    user_id = login_session['user_id']
+                                )
         session.add(newCategory)
         session.commit()
         flash('New Category Created', 'positive')
@@ -90,7 +113,12 @@ def itemlist(category_id):
 @app.route('/categories/<int:category_id>/itemlist/new', methods=['GET', 'POST'])
 def newItemList(category_id):
     if request.method == 'POST':
-        newItem = CategoryItem(name = request.form['name'], description = request.form['description'], category_id = category_id)
+        newItem = CategoryItem(
+                                name = request.form['name'],
+                                description = request.form['description'],
+                                category_id = category_id,
+                                user_id = login_session['user_id']
+                              )
         session.add(newItem)
         session.commit()
         flash('New Item Created', 'positive')
