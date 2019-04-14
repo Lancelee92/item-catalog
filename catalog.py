@@ -51,7 +51,6 @@ def authorlistJSON():
 def home():
     categories = session.query(Categories)
     return render_template('home.html', categories=categories)
-    #return "homepage with list of Categories"
 
 @app.route('/topNewItem')
 def topNewItem():
@@ -225,7 +224,7 @@ def gconnect():
     if not user_id:
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
-
+    # show login success
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -273,6 +272,7 @@ def gdisconnect():
 
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
+    # verify state from login page
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -280,7 +280,7 @@ def fbconnect():
     access_token = request.data
     print("access token received %s " % access_token)
 
-
+    # Read json file for app_id and app_secret
     app_id = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_id']
     app_secret = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_secret']
     url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (app_id, app_secret, access_token)
@@ -297,7 +297,7 @@ def fbconnect():
         api calls
     '''
     token = result.split(',')[0].split(':')[1].replace('"', '')
-    url = 'https://graph.facebook.com/v2.8/me?access_token=%s&fields=name,id,email' % token
+    url = 'https://graph.facebook.com/v3.2/me?access_token=%s&fields=name,id,email' % token
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     # print "url sent for API access:%s"% url
@@ -324,7 +324,7 @@ def fbconnect():
     if not user_id:
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
-
+    # show login success
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -346,7 +346,7 @@ def fbdisconnect():
     url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id,access_token)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
-    # result = json.loads(h.request(url, 'DELETE')[1])
+    # Reset the user's session
     del login_session['provider']
     del login_session['username']
     del login_session['email']
@@ -354,33 +354,19 @@ def fbdisconnect():
     del login_session['picture'] 
     del login_session['access_token']
     flash('You have been logged out!', 'positive')
+    # Redirect back to home
     response = make_response(redirect('/home'))
-    #response = make_response(json.dumps('you have been logged out.'), 200)
-    #response.headers['Content-Type'] = 'application/json'
     return response
-    # if result['success'] == 'True':
-    #     # Reset the user's session
-    #     del login_session['provider']
-    #     del login_session['username']
-    #     del login_session['email']
-    #     del login_session['facebook_id']
-    #     del login_session['picture']
-    #     del login_session['access_token']
-
-    #     response = make_response(json.dumps('you have been fbed logged out.'), 200)
-    #     response.headers['Content-Type'] = 'application/json'
-    #     return response
-    # else:
-    #     # For whatever reason, the given token was invalid
-    #     response = make_response(json.dumps('Failed to revoke token for the given user. Result: %s ' % result), 400)
-    #     response.headers['Content-Type'] = 'application/json'
-    #     return response
 
 # User Helper Functions
 
 def createUser(login_session):
-    newUser = User(name=login_session['username'], email=login_session['email'],
-             picture=login_session['picture'], provider = login_session['provider'])
+    newUser = User(
+                    name=login_session['username'],
+                    email=login_session['email'],
+                    picture=login_session['picture'], 
+                    provider = login_session['provider']
+                  )
     session.add(newUser)
     session.commit()
     user = session.query(User).filter_by(email=login_session['email']).one()
