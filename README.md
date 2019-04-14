@@ -21,3 +21,14 @@
 2. Run `` & python catalog.py `` to start the site
 3. Browse the site at [http://localhost:5000](http://localhost:5000)
 
+### JSON Api
+Click on the following link to access the JSON Api. 
+For Item List APi, the link used depends on the category id
+`` localhost:5000/categories/<int:category_id>/itemlist/JSON ``
+
+- [Home Page Api](http://localhost:5000/JSON)
+- [Author List Api](http://localhost:5000/authorlist/JSON)
+- [Recently Added Api](http://localhost:5000/topNewItem/JSON)
+- [Item List Api](localhost:5000/categories/1/itemlist/JSON)
+
+
