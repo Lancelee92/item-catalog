@@ -16,6 +16,16 @@ class User(Base):
     picture = Column(String(250))
     provider = Column(String(250))
 
+    @property
+    def serialize(self):
+        return{
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'picture': self.picture,
+            'provider': self.provider
+        }
+
 class Categories(Base):
     __tablename__ = 'categories'
 

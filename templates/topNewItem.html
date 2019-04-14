@@ -24,6 +24,9 @@
             <div class="content">
                 <div class="header">{{item.name}}</div>
             </div>
+            <div class="meta">
+              <span>Author: {{item.user.name}}</span>
+            </div>
             <h4 class="ui sub header">{{item.time_created}}</h4>
             <div class="event">
                 <div class="content">
@@ -32,6 +35,7 @@
                     </div>
                 </div>
             </div>   
+            
             <div class="extra content">
                 <div class="ui large transparent left icon input">
                     <a href="{{url_for('editItemList', item_id = item.id, category_id = item.category_id)}}">Edit</a>
