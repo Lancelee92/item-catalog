@@ -3,6 +3,7 @@ import sysconfig
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm import backref
 from sqlalchemy import create_engine
 
 Base = declarative_base()
@@ -52,7 +53,7 @@ class CategoryItem(Base):
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     category_id = Column(Integer, ForeignKey('categories.id', ondelete='CASCADE'))
     user_id = Column(Integer, ForeignKey('user.id'))
-    category = relationship(Categories, backref=backref('children', passive_deletes=True))
+    category = relationship(Categories, backref= backref('category_item', cascade='delete'))
     user = relationship(User)
 
     @property

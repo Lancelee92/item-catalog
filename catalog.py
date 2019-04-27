@@ -35,6 +35,11 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+@app.route('/test')
+def testJSON():
+    itemlist = session.query(CategoryItem)
+    return jsonify(categories=[r.serialize for r in itemlist])
+
 @app.route('/home/JSON')
 def categoryJSON():
     categories = session.query(Categories)
