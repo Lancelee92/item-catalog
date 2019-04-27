@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from functools import wraps
 app = Flask(__name__)
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
@@ -25,6 +26,14 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if login_session.get('username') is None:
+            return redirect(url_for('showLogin', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route('/home/JSON')
 def categoryJSON():
@@ -63,6 +72,7 @@ def authorlist():
     return render_template('authorlist.html', authors = authors)
 
 @app.route('/category/new', methods=['GET', 'POST'])
+@login_required
 def newCategory():
     if request.method == 'POST':
         newCategory = Categories(
@@ -78,6 +88,7 @@ def newCategory():
         return render_template('newCategory.html')
 
 @app.route('/categories/<int:category_id>/edit', methods=['GET', 'POST'])
+@login_required
 def editCategory(category_id):
     category = session.query(Categories).filter_by(id = category_id).one()
 
@@ -92,6 +103,7 @@ def editCategory(category_id):
         return render_template('editCategory.html', category = category)
 
 @app.route('/categories/<int:category_id>/delete', methods=['GET', 'POST'])
+@login_required
 def deleteCategory(category_id):
     category = session.query(Categories).filter_by(id = category_id).one()
 
@@ -110,6 +122,7 @@ def itemlist(category_id):
     # return "itemlist"
 
 @app.route('/categories/<int:category_id>/itemlist/new', methods=['GET', 'POST'])
+@login_required
 def newItemList(category_id):
     if request.method == 'POST':
         newItem = CategoryItem(
@@ -126,6 +139,7 @@ def newItemList(category_id):
         return render_template('newItem.html', category_id = category_id)
 
 @app.route('/categories/<int:category_id>/itemlist/<int:item_id>/edit', methods=['GET', 'POST'])
+@login_required
 def editItemList(category_id, item_id):
     category = session.query(Categories).filter_by(id = category_id).one()
     item = session.query(CategoryItem).filter_by(category_id = category_id).filter_by(id=item_id).one()
@@ -141,6 +155,7 @@ def editItemList(category_id, item_id):
         return render_template('editItem.html', item = item,category_name = category.name)
 
 @app.route('/categories/<int:category_id>/itemlist/<int:item_id>/delete', methods=['GET', 'POST'])
+@login_required
 def deleteItemList(category_id, item_id):
     category = session.query(Categories).filter_by(id = category_id).one()
     item = session.query(CategoryItem).filter_by(category_id = category_id).filter_by(id=item_id).one()

@@ -50,9 +50,9 @@ class CategoryItem(Base):
     id = Column(Integer, primary_key = True)
     description = Column(String(500))
     time_created = Column(DateTime(timezone=True), server_default=func.now())
-    category_id = Column(Integer, ForeignKey('categories.id'))
+    category_id = Column(Integer, ForeignKey('categories.id', ondelete='CASCADE'))
     user_id = Column(Integer, ForeignKey('user.id'))
-    category = relationship(Categories)
+    category = relationship(Categories, backref=backref('children', passive_deletes=True))
     user = relationship(User)
 
     @property
