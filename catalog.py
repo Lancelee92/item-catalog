@@ -98,6 +98,10 @@ def editCategory(category_id):
     category = session.query(Categories).filter_by(id = category_id).one()
 
     if request.method == 'POST':
+        if category.user.name != login_session['username']:
+            flash('Permission Edit! Unauthorised Edit!', 'Negative')
+            return redirect(url_for('home'))
+
         category.name = request.form['name']
         category.img = request.form['img']
         session.add(category)
@@ -113,6 +117,10 @@ def deleteCategory(category_id):
     category = session.query(Categories).filter_by(id = category_id).one()
 
     if request.method == 'POST':
+        if category.user.name != login_session['username']:
+            flash('Permission Denied! Unauthorised Delete!', 'Negative')
+            return redirect(url_for('home'))
+
         session.delete(category)
         session.commit()
         flash('Item Deleted', 'positive')
@@ -150,6 +158,10 @@ def editItemList(category_id, item_id):
     item = session.query(CategoryItem).filter_by(category_id = category_id).filter_by(id=item_id).one()
 
     if request.method == 'POST':
+        if item.user.name != login_session['username']:
+            flash('Permission Edit! Unauthorised Edit!', 'Negative')
+            return redirect(url_for('home'))
+
         item.name = request.form['name']
         item.description = request.form['description']
         session.add(item)
@@ -166,6 +178,10 @@ def deleteItemList(category_id, item_id):
     item = session.query(CategoryItem).filter_by(category_id = category_id).filter_by(id=item_id).one()
 
     if request.method == 'POST':
+        if item.user.name != login_session['username']:
+            flash('Permission Denied! Unauthorised Delete!', 'Negative')
+            return redirect(url_for('home'))
+
         session.delete(item)
         session.commit()
         flash('Item Deleted', 'positive')
