@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from functools import wraps
 app = Flask(__name__)
+application = app
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import cgi
