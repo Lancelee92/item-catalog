@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from functools import wraps
-app = Flask(__name__)
-application = app
+application = Flask(__name__)
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import cgi
@@ -36,48 +35,48 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@app.route('/test')
+@application.route('/test')
 def testJSON():
     itemlist = session.query(CategoryItem)
     return jsonify(categories=[r.serialize for r in itemlist])
 
-@app.route('/home/JSON')
+@application.route('/home/JSON')
 def categoryJSON():
     categories = session.query(Categories)
     return jsonify(categories=[r.serialize for r in categories])
 
-@app.route('/categories/<int:category_id>/itemlist/JSON')
+@application.route('/categories/<int:category_id>/itemlist/JSON')
 def itemlistJSON(category_id):
     itemlist = session.query(CategoryItem).filter_by(category_id = category_id)
     return jsonify(itemlist=[r.serialize for r in itemlist])
 
-@app.route('/topNewItem/JSON')
+@application.route('/topNewItem/JSON')
 def topNewItemJSON():
     items = session.query(CategoryItem).order_by(CategoryItem.time_created.desc()).limit(10)
     return jsonify(itemlist=[r.serialize for r in items])
 
-@app.route('/authorlist/JSON')
+@application.route('/authorlist/JSON')
 def authorlistJSON():
     authors = session.query(User)
     return jsonify(authors=[r.serialize for r in authors])
 
-@app.route('/')
-@app.route('/home')
+@application.route('/')
+@application.route('/home')
 def home():
     categories = session.query(Categories)
     return render_template('home.html', categories=categories)
 
-@app.route('/topNewItem')
+@application.route('/topNewItem')
 def topNewItem():
     items = session.query(CategoryItem).order_by(CategoryItem.time_created.desc()).limit(10)
     return render_template('topNewItem.html', items=items)
 
-@app.route('/authorlist')
+@application.route('/authorlist')
 def authorlist():
     authors = session.query(User)
     return render_template('authorlist.html', authors = authors)
 
-@app.route('/category/new', methods=['GET', 'POST'])
+@application.route('/category/new', methods=['GET', 'POST'])
 @login_required
 def newCategory():
     if request.method == 'POST':
@@ -93,7 +92,7 @@ def newCategory():
     else:
         return render_template('newCategory.html')
 
-@app.route('/categories/<int:category_id>/edit', methods=['GET', 'POST'])
+@application.route('/categories/<int:category_id>/edit', methods=['GET', 'POST'])
 @login_required
 def editCategory(category_id):
     category = session.query(Categories).filter_by(id = category_id).one()
@@ -112,7 +111,7 @@ def editCategory(category_id):
     else:
         return render_template('editCategory.html', category = category)
 
-@app.route('/categories/<int:category_id>/delete', methods=['GET', 'POST'])
+@application.route('/categories/<int:category_id>/delete', methods=['GET', 'POST'])
 @login_required
 def deleteCategory(category_id):
     category = session.query(Categories).filter_by(id = category_id).one()
@@ -129,13 +128,13 @@ def deleteCategory(category_id):
     else:
         return render_template('deleteCategory.html', category = category)
 
-@app.route('/categories/<int:category_id>/itemlist')
+@application.route('/categories/<int:category_id>/itemlist')
 def itemlist(category_id):
     itemlist = session.query(CategoryItem).filter_by(category_id = category_id)
     return render_template('itemlist.html', itemlist = itemlist, category_id = category_id)
     # return "itemlist"
 
-@app.route('/categories/<int:category_id>/itemlist/new', methods=['GET', 'POST'])
+@application.route('/categories/<int:category_id>/itemlist/new', methods=['GET', 'POST'])
 @login_required
 def newItemList(category_id):
     if request.method == 'POST':
@@ -152,7 +151,7 @@ def newItemList(category_id):
     else:
         return render_template('newItem.html', category_id = category_id)
 
-@app.route('/categories/<int:category_id>/itemlist/<int:item_id>/edit', methods=['GET', 'POST'])
+@application.route('/categories/<int:category_id>/itemlist/<int:item_id>/edit', methods=['GET', 'POST'])
 @login_required
 def editItemList(category_id, item_id):
     category = session.query(Categories).filter_by(id = category_id).one()
@@ -172,7 +171,7 @@ def editItemList(category_id, item_id):
     else:
         return render_template('editItem.html', item = item,category_name = category.name)
 
-@app.route('/categories/<int:category_id>/itemlist/<int:item_id>/delete', methods=['GET', 'POST'])
+@application.route('/categories/<int:category_id>/itemlist/<int:item_id>/delete', methods=['GET', 'POST'])
 @login_required
 def deleteItemList(category_id, item_id):
     category = session.query(Categories).filter_by(id = category_id).one()
@@ -193,14 +192,14 @@ def deleteItemList(category_id, item_id):
 """
 Login Section
 """
-@app.route('/login')
+@application.route('/login')
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
     login_session['state'] = state
     return render_template('login.html', STATE = login_session['state'])
     #return "Login page"
 
-@app.route('/gconnect', methods=['POST'])
+@application.route('/gconnect', methods=['POST'])
 def gconnect():
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -274,7 +273,7 @@ def gconnect():
     return output
 
 #DISCONNECT - Revoke a current user's token and reset their login_session.
-@app.route("/gdisconnect")
+@application.route("/gdisconnect")
 def gdisconnect():
     #Only disconnect a connected user.
     credentials = login_session.get('credentials')
@@ -307,7 +306,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-@app.route('/fbconnect', methods=['POST'])
+@application.route('/fbconnect', methods=['POST'])
 def fbconnect():
     # verify state from login page
     if request.args.get('state') != login_session['state']:
@@ -374,7 +373,7 @@ def fbconnect():
     flash("Now logged in as %s" % login_session['username'])
     return output
 
-@app.route('/fbdisconnect')
+@application.route('/fbdisconnect')
 def fbdisconnect():
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
@@ -422,6 +421,6 @@ def getUserID(email):
         return None
 
 if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
-    app.debug = True
-    app.run(host = '0.0.0.0', port = 5000)
+    application.secret_key = 'super_secret_key'
+    application.debug = True
+    application.run(host = '0.0.0.0', port = 5000)
