@@ -21,9 +21,11 @@
 5. `sudo apt-get install postgresql postgresql-contrib`
 6. `sudo apt-get install libpq-dev python-dev`
 7. `sudo apt-get install libpq-dev python-dev`
-8.
+8. `pip install Flask`
 
-#####Use sudo tail /var/log/apache2/error.log to check log
+
+#### ' ssh -i ~/.ssh/linuxServer.rsa -p 2200 grader@52.221.234.110 '
+#### Use sudo tail /var/log/apache2/error.log to check log
 
 # item-catalog
 
