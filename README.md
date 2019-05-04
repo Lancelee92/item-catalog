@@ -13,19 +13,58 @@
 ## Security
 1. 
 
-#Package installation
-1. `sudo apt-get update`
-2. `sudo apt-get install python-requests`
-3. `sudo apt-get install python-oauth2client`
-4. `sudo apt-get install python-psycopg2`
-5. `sudo apt-get install postgresql postgresql-contrib`
-6. `sudo apt-get install libpq-dev python-dev`
-7. `sudo apt-get install libpq-dev python-dev`
-8. `pip install Flask`
+## Package installation
 
+1. `$ sudo apt-get update`
+2. `$ sudo apt-get install python`
+3. `$ sudo apt-get install python-pip`
+4. `$ sudo pip install virtualenv`
+5. `$ sudo apt-get install python-requests`
+6. `$ sudo apt-get install python-oauth2client`
+7. `$ sudo apt-get install python-psycopg2`
+8. `$ pip install Flask`
+9. `$ pip install httplib2 sqlalchemy`
+10. `$ sudo apt-get install libpq-dev python-dev`
+11. `$ sudo apt-get install postgresql postgresql-contrib`
 
-#### ' ssh -i ~/.ssh/linuxServer.rsa -p 2200 grader@52.221.234.110 '
-#### Use sudo tail /var/log/apache2/error.log to check log
+## PostgreSQL configuration
+
+1. Login with `sudo su - postgres`
+2. Connect PostgreSQL shell with `$ psql`
+3. Create new user with password
+    
+    > `# CREATE USER catalog WITH PASSWORD 'password';`
+
+4. Allow Catalog user to *CREATEDB*
+    
+    > `# ALTER USER catalog CREATEDB;`
+
+5. Create *catalog* database with *catalog* user
+
+    > `# CREATE DATABASE catalog WITH OWNER catalog;`
+
+6. Connect to *catalog* database with `# \c catalog`
+
+7. Revoke all rights from public with 
+
+    > `# REVOKE ALL ON SCHEMA public FROM public;`
+
+8. Grant permission to catalog user
+
+    > `# GRANT ALL ON SCHEMA public TO catalog;`
+
+9. Exit with `# \q`
+
+10. Edit create_engine line in *database_setup.py* and *__init__.py*
+
+    ~~create_engine('sqlite:///itemcatalog.db')~~
+    >  `create_engine('postgresql://catalog:password@localhost/catalog')`
+
+11. Run `$ python /var/www/catalog/item-catalog/database_setup.py`
+
+> `$ ssh -i ~/.ssh/linuxServer.rsa -p 2200 grader@52.221.234.110` to connect      server
+
+> Use `$ sudo tail /var/log/apache2/error.log` to check log
 
 # item-catalog
 
