@@ -66,7 +66,7 @@
 
 > Use `$ sudo tail /var/log/apache2/error.log` to check log
 
-# item-catalog
+# Item-Catalog
 
 ## **Guide** 
 
