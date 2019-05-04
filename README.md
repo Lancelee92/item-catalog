@@ -1,3 +1,30 @@
+# Linux-Server
+
+## Lightrail setup
+1. Download Lightrail default keys.
+2. mv ~/Download/LightsailDefaultKey-ap-southeast-1.pem ~/.ssh/
+3. chmod 700 ~/.ssh/
+4. chmod 600 ~/.ssh/LightsailDefaultKey-ap-southeast-1.pem
+5. Connect to remote Server using ssh ubuntu@server -i ~/.ssh/LightsailDefaultKey-ap-southeast-1.pem
+
+## User Management
+1. Connect to user *grader* by entering `ssh -i ~/.ssh/linuxServer.rsa -p 2200 grader@52.221.234.110` in command line
+
+## Security
+1. 
+
+#Package installation
+1. `sudo apt-get update`
+2. `sudo apt-get install python-requests`
+3. `sudo apt-get install python-oauth2client`
+4. `sudo apt-get install python-psycopg2`
+5. `sudo apt-get install postgresql postgresql-contrib`
+6. `sudo apt-get install libpq-dev python-dev`
+7. `sudo apt-get install libpq-dev python-dev`
+8.
+
+#####Use sudo tail /var/log/apache2/error.log to check log
+
 # item-catalog
 
 ## **Guide** 
