@@ -172,6 +172,24 @@ Note: Only Google Login is available currently.
 
 > Use `$ sudo tail /var/log/apache2/error.log` to check log
 
+## Reference
+
+[iliketomatoes github](https://github.com/iliketomatoes/linux_server_configuration)
+
+[jungleBadger github](https://github.com/jungleBadger/-nanodegree-linux-server#install-git-clone-and-setup-your-catalog-app-project)
+
+[How to deploy flask application](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
+
+[PostgreSQL](https://www.postgresql.org/)
+
+[Lightsail Documentation](https://docs.aws.amazon.com/lightsail/index.html)
+
+[Key based authentication](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server)
+
+
+
+
+
 # Item-Catalog
 
 ## **Guide** 
