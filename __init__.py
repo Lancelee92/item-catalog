@@ -1,13 +1,28 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import (
+    Flask, 
+    render_template, 
+    request, redirect, 
+    url_for, 
+    flash, 
+    jsonify
+)
 from functools import wraps
 application = Flask(__name__)
 
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+from BaseHTTPServer import (
+    BaseHTTPRequestHandler, 
+    HTTPServer
+)
 import cgi
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from database_setup import Categories, Base, CategoryItem, User
+from database_setup import (
+    Categories, 
+    Base, 
+    CategoryItem, 
+    User
+)
 
 from flask import session as login_session
 import random
